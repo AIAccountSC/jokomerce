@@ -39,13 +39,32 @@ button { font: inherit; cursor: pointer; }
 h1, h2, h3, h4, p { margin: 0; }
 img { display: block; max-width: 100%; }
 
-/* Warm gradient layer behind everything */
+/* Warm gradient layer behind everything — stronger so glass surfaces
+   have real color variation to refract through. */
 body::before {
   content: ""; position: fixed; inset: 0;
   background:
     radial-gradient(1200px 600px at 100% -100px, #F8D484 0%, transparent 60%),
-    radial-gradient(900px 600px at -10% 50%, #FBF1D5 0%, transparent 60%);
+    radial-gradient(900px 600px at -10% 50%, #FBF1D5 0%, transparent 60%),
+    radial-gradient(800px 500px at 90% 80%, rgba(242, 167, 24, 0.18) 0%, transparent 65%);
   pointer-events: none; z-index: -1;
+}
+
+/* ===== GLASS TOKENS =====
+   Used by every card/pill/chip surface across the page. Cream/amber
+   semi-translucent fill + saturate-and-blur backdrop = frosted look
+   that picks up the body gradient. */
+:root {
+  --glass-bg:      rgba(255, 252, 244, 0.55);
+  --glass-bg-hi:   rgba(255, 252, 244, 0.72);   /* hover / contrast state */
+  --glass-bg-lo:   rgba(255, 252, 244, 0.42);   /* subtle pills */
+  --glass-border:  rgba(232, 221, 196, 0.65);
+  --glass-blur:    saturate(180%) blur(18px);
+  --glass-blur-lo: saturate(160%) blur(10px);
+  --glass-shadow:  0 12px 36px -22px rgba(60, 40, 10, 0.22),
+                   inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  --glass-shadow-lg: 0 30px 60px -32px rgba(60, 40, 10, 0.22),
+                     inset 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 
 /* Thin black top bar */
@@ -152,7 +171,11 @@ section { padding: 72px 0; position: relative; }
 .chip {
   display: inline-flex; align-items: center; gap: 10px;
   padding: 9px 16px; border-radius: var(--radius-pill);
-  background: var(--card); border: 1px solid var(--rule);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-lo);
+  -webkit-backdrop-filter: var(--glass-blur-lo);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
   font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
   color: var(--ink);
 }
@@ -172,7 +195,11 @@ section { padding: 72px 0; position: relative; }
   margin-top: 24px;
   display: inline-flex; align-items: center; gap: 10px;
   padding: 12px 20px; border-radius: var(--radius-pill);
-  background: var(--card); border: 1px solid var(--rule);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-lo);
+  -webkit-backdrop-filter: var(--glass-blur-lo);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
   font-size: 12.5px; color: var(--ink-2);
   max-width: 100%;
 }
@@ -206,7 +233,11 @@ section { padding: 72px 0; position: relative; }
 }
 .float-card.dark {
   top: 30px; left: 30px;
-  background: var(--ink); color: #fff;
+  background: rgba(20, 17, 12, 0.7);
+  backdrop-filter: saturate(180%) blur(16px);
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   min-width: 170px;
 }
 .float-card.dark .big {
@@ -218,7 +249,10 @@ section { padding: 72px 0; position: relative; }
 }
 .float-card.light {
   bottom: 30px; right: 30px;
-  background: var(--paper); border: 1px solid var(--rule);
+  background: var(--glass-bg-hi);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
   min-width: 240px;
 }
 .float-card.light .eye {
@@ -230,17 +264,22 @@ section { padding: 72px 0; position: relative; }
   line-height: 1.25; color: var(--ink);
 }
 
-/* ===== SHARED CARD ===== */
+/* ===== SHARED CARD (glass) ===== */
 .card {
-  background: var(--card);
-  border: 1px solid var(--rule);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-card);
   padding: 22px;
-  transition: transform .25s ease, box-shadow .25s ease, border-color .2s ease;
+  box-shadow: var(--glass-shadow);
+  transition: transform .25s ease, box-shadow .25s ease, border-color .2s ease, background .25s ease;
 }
 .card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 32px -18px rgba(60, 40, 10, 0.18);
+  background: var(--glass-bg-hi);
+  box-shadow: 0 22px 44px -22px rgba(60, 40, 10, 0.24),
+              inset 0 1px 0 rgba(255, 255, 255, 0.55);
   border-color: #DBC9A1;
 }
 .card .num-circle {
@@ -258,15 +297,18 @@ section { padding: 72px 0; position: relative; }
 }
 .stack { display: flex; flex-direction: column; gap: 12px; }
 .row-card {
-  background: var(--card);
-  border: 1px solid var(--rule);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
   border-radius: 18px;
   padding: 18px 20px;
   display: grid; grid-template-columns: 36px 1fr;
   gap: 14px; align-items: start;
-  transition: border-color .2s ease, background .2s ease;
+  box-shadow: var(--glass-shadow);
+  transition: border-color .2s ease, background .2s ease, transform .2s ease;
 }
-.row-card:hover { border-color: #DBC9A1; background: var(--paper); }
+.row-card:hover { border-color: #DBC9A1; background: var(--glass-bg-hi); transform: translateX(2px); }
 .row-card .num-circle { width: 34px; height: 34px; }
 .row-card p { font-size: 14px; line-height: 1.5; color: var(--ink-2); }
 .row-card p b { color: var(--ink); font-weight: 600; }
@@ -308,7 +350,10 @@ section { padding: 72px 0; position: relative; }
   font-size: 10.5px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
   color: var(--accent-2);
   padding: 5px 10px; border-radius: var(--radius-pill);
-  background: var(--bg); border: 1px solid var(--rule);
+  background: var(--glass-bg-hi);
+  backdrop-filter: var(--glass-blur-lo);
+  -webkit-backdrop-filter: var(--glass-blur-lo);
+  border: 1px solid var(--glass-border);
   flex-shrink: 0;
 }
 .audience-note p { margin: 0; font-size: 15px; color: var(--ink); line-height: 1.5; font-weight: 500; max-width: none; }
@@ -333,7 +378,10 @@ section { padding: 72px 0; position: relative; }
 .brand-chip {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 5px 10px; border-radius: var(--radius-pill);
-  background: var(--bg); border: 1px solid var(--rule);
+  background: var(--glass-bg-lo);
+  backdrop-filter: var(--glass-blur-lo);
+  -webkit-backdrop-filter: var(--glass-blur-lo);
+  border: 1px solid var(--glass-border);
   font-size: 11px; font-weight: 600; color: var(--ink-2); letter-spacing: -0.005em;
 }
 .brand-chip img { width: 13px; height: 13px; }
@@ -380,7 +428,10 @@ section { padding: 72px 0; position: relative; }
 
 .lpill {
   padding: 8px 16px; border-radius: var(--radius-pill);
-  background: var(--card); border: 1px solid var(--rule);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-lo);
+  -webkit-backdrop-filter: var(--glass-blur-lo);
+  border: 1px solid var(--glass-border);
   font-size: 13px; color: var(--ink); font-weight: 500;
   display: inline-flex; align-items: center; white-space: nowrap;
 }
@@ -412,7 +463,10 @@ section { padding: 72px 0; position: relative; }
 .skills-grid { margin-top: 24px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
 .skill {
   padding: 11px 14px; border-radius: 14px;
-  background: var(--card); border: 1px solid var(--rule);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-lo);
+  -webkit-backdrop-filter: var(--glass-blur-lo);
+  border: 1px solid var(--glass-border);
   display: flex; align-items: center; gap: 10px;
   font-size: 13px; color: var(--ink);
 }
@@ -427,11 +481,15 @@ section { padding: 72px 0; position: relative; }
 /* ===== FAQ ===== */
 .faq-list { display: flex; flex-direction: column; gap: 10px; }
 details.q {
-  background: var(--card); border: 1px solid var(--rule);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
   border-radius: 16px; padding: 18px 22px;
+  box-shadow: var(--glass-shadow);
   transition: background .2s ease;
 }
-details.q:hover { background: var(--paper); }
+details.q:hover { background: var(--glass-bg-hi); }
 details.q summary {
   list-style: none; cursor: pointer;
   display: flex; justify-content: space-between; align-items: center; gap: 18px;
@@ -479,6 +537,8 @@ details.q .a b { color: var(--ink); font-weight: 600; }
 }
 .final-form {
   background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: saturate(160%) blur(10px);
+  -webkit-backdrop-filter: saturate(160%) blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 18px; padding: 22px;
   display: flex; flex-direction: column; gap: 12px;
@@ -563,26 +623,30 @@ footer.site-footer {
 .m-item {
   display: inline-flex; align-items: center; gap: 12px;
   padding: 14px 22px; border-radius: var(--radius-pill);
-  background: var(--card); border: 1px solid var(--rule);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur-lo);
+  -webkit-backdrop-filter: var(--glass-blur-lo);
+  border: 1px solid var(--glass-border);
   font-size: 15px; font-weight: 600; color: var(--ink); letter-spacing: -0.01em;
   white-space: nowrap;
   transition: border-color .2s ease, background .2s ease;
 }
-.m-item:hover { border-color: #DBC9A1; background: var(--paper); }
+.m-item:hover { border-color: #DBC9A1; background: var(--glass-bg-hi); }
 .m-item img { width: 20px; height: 20px; opacity: 0.85; }
 
-/* ===== Reveal animation ===== */
+/* ===== Reveal animation =====
+   Pure-additive: content is fully visible at all times (so the page is
+   readable even if JS / IntersectionObserver never runs). The `.in`
+   class only adds an entrance animation — never hides content. */
 @keyframes joko-up {
-  from { opacity: 0; transform: translateY(24px); filter: blur(6px); }
-  to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+  from { transform: translateY(20px); filter: blur(4px); opacity: 0.001; }
+  to   { transform: translateY(0); filter: blur(0); opacity: 1; }
 }
-[data-reveal] { opacity: 0; }
 [data-reveal].in {
   animation: joko-up .9s cubic-bezier(.2, .6, .2, 1) both;
   animation-delay: var(--rd, 0ms);
 }
 @media (prefers-reduced-motion: reduce) {
-  [data-reveal] { opacity: 1; }
   [data-reveal].in { animation: none; }
 }
 

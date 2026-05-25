@@ -178,20 +178,18 @@ section { padding: 72px 0; position: relative; }
 }
 .trust-pill b { color: var(--ink); font-weight: 600; }
 
-/* Hero portrait + floating cards */
+/* Hero portrait + floating cards.
+   Photo fills the entire frame edge-to-edge; float-cards overlap on top. */
 .portrait {
   position: relative;
   border-radius: 28px;
-  background: var(--card);
-  border: 1px solid var(--rule);
   aspect-ratio: 4/4.4;
   overflow: hidden;
-  padding: 24px;
   box-shadow: 0 30px 60px -30px rgba(60, 40, 10, 0.18);
 }
 .portrait-img {
-  position: absolute; inset: 24px;
-  border-radius: 18px;
+  position: absolute; inset: 0;
+  border-radius: 28px;
   overflow: hidden;
   background: var(--card-2);
 }
@@ -392,15 +390,13 @@ section { padding: 72px 0; position: relative; }
 .about-grid { display: grid; grid-template-columns: 0.95fr 1.05fr; gap: 48px; align-items: start; }
 .about-photo {
   border-radius: 24px;
-  background: var(--card);
-  border: 1px solid var(--rule);
   aspect-ratio: 4/4.6;
   position: relative; overflow: hidden;
-  padding: 20px;
+  box-shadow: 0 28px 56px -30px rgba(60, 40, 10, 0.16);
 }
 .about-photo-img {
-  position: absolute; inset: 20px;
-  border-radius: 16px;
+  position: absolute; inset: 0;
+  border-radius: 24px;
   overflow: hidden;
   background: var(--card-2);
 }

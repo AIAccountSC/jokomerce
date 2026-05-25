@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
+import { TrustedTypesScript } from "@/components/TrustedTypesScript";
 import { LangProvider } from "@/lib/i18n";
 import "./globals.css";
 
@@ -129,6 +130,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       data-accent="yellow"
       className={`${GeistSans.variable} ${GeistMono.variable}`}
     >
+      <head>
+        {/* Must run FIRST — installs a Trusted Types default policy before
+            React or webpack touch any innerHTML / script.src sinks. */}
+        <TrustedTypesScript nonce={nonce} />
+      </head>
       <body>
         <script
           type="application/ld+json"

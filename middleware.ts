@@ -35,6 +35,9 @@ export function middleware(request: NextRequest) {
     `base-uri 'self'`,
     `object-src 'none'`,
     `manifest-src 'self'`,
+    // Allow our single `default` policy (installed in TrustedTypesScript)
+    // plus the names Next.js/webpack uses for chunk loading + dev.
+    `trusted-types default nextjs nextjs#bundler goog#html`,
     `require-trusted-types-for 'script'`,
     `upgrade-insecure-requests`,
   ]

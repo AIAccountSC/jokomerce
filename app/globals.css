@@ -84,25 +84,19 @@ body::before {
 .topline { height: 6px; background: var(--ink); }
 
 /* ===== NAV =====
-   Always glass — never fully transparent. Becomes more opaque + drops
-   a shadow once you scroll, but the bar itself is always visible. */
+   Floating-pill morph:
+   - At top of page  : full-width glass bar with rounded corners
+   - Scrolled state  : the same bar shrinks horizontally + rounds out
+                       into a centered floating pill that hovers above
+                       the content.
+   .nav-wrap is just a sticky positioner; the visible chrome is .nav. */
 .nav-wrap {
   position: sticky; top: 0; z-index: 50;
-  background: rgba(255, 250, 238, 0.45);
-  backdrop-filter: saturate(160%) blur(16px);
-  -webkit-backdrop-filter: saturate(160%) blur(16px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
-  transition: background .35s ease, box-shadow .35s ease, border-color .35s ease, backdrop-filter .35s ease;
+  padding: 12px var(--pad) 0;
+  background: transparent;
+  transition: padding-top .4s cubic-bezier(.2,.6,.2,1);
 }
-.nav-wrap.scrolled {
-  background: rgba(255, 250, 238, 0.68);
-  backdrop-filter: saturate(180%) blur(22px);
-  -webkit-backdrop-filter: saturate(180%) blur(22px);
-  border-bottom-color: rgba(255, 255, 255, 0.5);
-  box-shadow: 0 8px 32px -22px rgba(60, 40, 10, 0.2),
-              inset 0 1px 0 rgba(255, 255, 255, 0.7);
-}
+.nav-wrap.scrolled { padding-top: 16px; }
 .nav-progress {
   position: fixed; top: 0; left: 0; right: 0;
   height: 2px;
@@ -113,13 +107,50 @@ body::before {
   pointer-events: none;
 }
 .nav {
-  max-width: var(--max); margin: 0 auto;
-  padding: 18px var(--pad);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 12px 22px;
   display: flex; align-items: center; justify-content: space-between;
-  gap: 24px;
-  transition: padding .35s ease;
+  gap: 20px;
+  background: rgba(255, 250, 238, 0.45);
+  backdrop-filter: saturate(160%) blur(16px);
+  -webkit-backdrop-filter: saturate(160%) blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 22px;
+  box-shadow:
+    0 4px 16px -8px rgba(60, 40, 10, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  transition:
+    max-width .55s cubic-bezier(.2,.6,.2,1),
+    border-radius .45s cubic-bezier(.2,.6,.2,1),
+    padding .4s ease,
+    gap .4s ease,
+    background .35s ease,
+    box-shadow .35s ease,
+    border-color .35s ease;
 }
-.nav-wrap.scrolled .nav { padding: 12px var(--pad); }
+/* Pill state — narrower, full-round, more solid, deeper float shadow */
+.nav-wrap.scrolled .nav {
+  max-width: 720px;
+  padding: 8px 8px 8px 18px;
+  gap: 14px;
+  background: rgba(255, 250, 238, 0.82);
+  border-color: rgba(255, 255, 255, 0.7);
+  border-radius: 999px;
+  box-shadow:
+    0 18px 40px -18px rgba(60, 40, 10, 0.28),
+    0 4px 12px -4px rgba(60, 40, 10, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+/* Shrink the brand mark + CTA when pilled so the pill doesn't feel bloated */
+.brand .mark { transition: width .35s ease, height .35s ease, font-size .35s ease; }
+.nav-wrap.scrolled .brand .mark { width: 32px; height: 32px; font-size: 14px; }
+.nav-wrap.scrolled .brand .sub { display: none; }
+.cta-pill { transition: transform .15s ease, background .2s ease, color .2s ease, padding .35s ease, font-size .35s ease; }
+.nav-wrap.scrolled .nav .cta-pill { padding: 9px 16px; font-size: 13px; }
+.nav-links { transition: gap .35s ease, font-size .35s ease; }
+.nav-wrap.scrolled .nav-links { font-size: 13px; gap: 2px; }
+.nav-wrap.scrolled .nav-links a { padding: 7px 12px; }
 
 .brand { display: inline-flex; align-items: center; gap: 12px; }
 .brand .mark {

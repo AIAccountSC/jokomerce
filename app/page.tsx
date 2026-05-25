@@ -226,11 +226,12 @@ export default function Home() {
                 <div className="portrait-img">
                   <Image
                     src={JOACHIM.hero}
-                    width={900}
-                    height={1125}
+                    width={1086}
+                    height={1448}
                     alt="Joachim Heidel — Head of Marketplace & Founder, Jokomerce"
                     priority
-                    sizes="(max-width: 980px) 100vw, 520px"
+                    quality={100}
+                    sizes="(max-width: 980px) 100vw, 600px"
                   />
                 </div>
                 <div className="float-card dark">
@@ -495,10 +496,11 @@ export default function Home() {
               <div className="about-photo-img">
                 <Image
                   src={JOACHIM.about}
-                  width={900}
-                  height={1125}
+                  width={1086}
+                  height={1448}
                   alt="Joachim Heidel — Founder, Jokomerce"
-                  sizes="(max-width: 980px) 100vw, 540px"
+                  quality={100}
+                  sizes="(max-width: 980px) 100vw, 600px"
                 />
               </div>
             </Reveal>

@@ -15,8 +15,8 @@
   --accent: #1F7A3F;
   --accent-fg: #FFFFFF;
   --accent-soft: rgba(31, 122, 63, 0.08);
-  --sans: "Geist", "Helvetica Neue", Helvetica, sans-serif;
-  --mono: "Geist Mono", ui-monospace, monospace;
+  --sans: var(--font-geist-sans), "Geist", "Helvetica Neue", Helvetica, sans-serif;
+  --mono: var(--font-geist-mono), "Geist Mono", ui-monospace, monospace;
   --pad: clamp(20px, 5vw, 56px);
   --page-max: 1400px;
 }

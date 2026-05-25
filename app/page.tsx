@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { IconBox } from "@/components/Icon";
 import { Marquee } from "@/components/Marquee";
 import { ProcessSection } from "@/components/ProcessSection";
@@ -8,7 +9,7 @@ import { FinalCTA } from "@/components/FinalCTA";
 import { KPI, HeadlineReveal } from "@/components/Reveals";
 import { useT } from "@/lib/i18n";
 import { COPY } from "@/lib/copy";
-import { JOACHIM } from "@/lib/photos";
+import { JOACHIM, JOACHIM_W, JOACHIM_H } from "@/lib/photos";
 
 const PROBLEMS = [
   {
@@ -364,7 +365,15 @@ export default function Home() {
 
           <div className="hero-portrait-wrap" data-reveal style={{ ["--reveal-delay" as never]: "200ms" }}>
             <div className="hero-portrait">
-              <img className="photo-img" src={JOACHIM.hero} alt="Joachim Heidel" />
+              <Image
+                className="photo-img"
+                src={JOACHIM.hero}
+                width={JOACHIM_W}
+                height={JOACHIM_H}
+                alt="Joachim Heidel — Head of Marketplace & Founder, Jokomerce"
+                priority
+                sizes="(max-width: 760px) 100vw, (max-width: 1100px) 360px, 520px"
+              />
               <div className="name-block">
                 <div>
                   <div className="n">Joachim Heidel</div>
@@ -775,7 +784,15 @@ export default function Home() {
         <div className="about">
           <div className="about-photo" data-reveal>
             <div className="frame">
-              <img className="photo-img" src={JOACHIM.about} alt="Joachim Heidel" />
+              <Image
+                className="photo-img"
+                src={JOACHIM.about}
+                width={JOACHIM_W}
+                height={JOACHIM_H}
+                alt="Joachim Heidel — Founder, Jokomerce"
+                sizes="(max-width: 1100px) 100vw, 600px"
+                loading="lazy"
+              />
               <span className="signature">— J.H.</span>
             </div>
             <div className="photo-cap">

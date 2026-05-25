@@ -39,28 +39,29 @@ button { font: inherit; cursor: pointer; }
 h1, h2, h3, h4, p { margin: 0; }
 img { display: block; max-width: 100%; }
 
-/* Saturated background — glass surfaces need actual color variation
-   to refract. Stronger amber + peach blobs scattered across the page
-   so blur reveals real movement of color through every card. */
+/* Body gradient — softer cream/amber so cards don't have to fight an
+   over-saturated backdrop for text contrast. */
 body::before {
   content: ""; position: fixed; inset: 0;
   background:
-    radial-gradient(900px 700px at 100% -100px, #F4B658 0%, transparent 55%),
-    radial-gradient(700px 600px at -10% 30%, #F8D58A 0%, transparent 60%),
-    radial-gradient(800px 500px at 90% 70%, rgba(242, 167, 24, 0.35) 0%, transparent 60%),
-    radial-gradient(600px 500px at 30% 100%, #F9C26B 0%, transparent 55%),
-    radial-gradient(500px 400px at 70% 40%, rgba(255, 200, 100, 0.3) 0%, transparent 60%);
+    radial-gradient(900px 700px at 100% -100px, #FBDDA1 0%, transparent 55%),
+    radial-gradient(700px 600px at -10% 30%, #FCE5B6 0%, transparent 60%),
+    radial-gradient(800px 500px at 90% 70%, rgba(242, 167, 24, 0.18) 0%, transparent 60%),
+    radial-gradient(600px 500px at 30% 100%, #FBD898 0%, transparent 55%),
+    radial-gradient(500px 400px at 70% 40%, rgba(255, 220, 160, 0.22) 0%, transparent 60%);
   pointer-events: none; z-index: -1;
 }
 
-/* ===== LIQUID-GLASS TOKENS =====
-   High transparency + strong saturate-and-blur backdrop. The whole
-   point is that warm body color shows through visibly. */
+/* ===== LIQUID-GLASS TOKENS — two-tier =====
+   Content cards (--glass-bg) are opaque enough to keep WCAG-AA body-text
+   contrast against the warm backdrop. Pills/chips/marquee (--glass-bg-lo)
+   stay highly transparent because they only carry short labels in bold
+   --ink, which still reads cleanly. */
 :root {
-  --glass-bg:      rgba(255, 250, 238, 0.30);    /* main surface */
-  --glass-bg-hi:   rgba(255, 250, 238, 0.42);    /* hover / contrast */
-  --glass-bg-lo:   rgba(255, 250, 238, 0.18);    /* subtle pills/chips */
-  --glass-border:  rgba(255, 255, 255, 0.45);    /* highlight edge */
+  --glass-bg:      rgba(255, 250, 238, 0.62);    /* content cards — readable */
+  --glass-bg-hi:   rgba(255, 250, 238, 0.78);    /* hover / contrast */
+  --glass-bg-lo:   rgba(255, 250, 238, 0.28);    /* short-label pills/chips */
+  --glass-border:  rgba(255, 255, 255, 0.55);    /* bright lens rim */
   --glass-blur:    saturate(180%) blur(22px);
   --glass-blur-lo: saturate(160%) blur(14px);
   /* Liquid edge: bright top highlight (the "lens curl"), soft drop, */
@@ -82,19 +83,24 @@ body::before {
 /* Thin black top bar */
 .topline { height: 6px; background: var(--ink); }
 
-/* ===== NAV ===== */
+/* ===== NAV =====
+   Always glass — never fully transparent. Becomes more opaque + drops
+   a shadow once you scroll, but the bar itself is always visible. */
 .nav-wrap {
   position: sticky; top: 0; z-index: 50;
-  background: transparent;
+  background: rgba(255, 250, 238, 0.45);
+  backdrop-filter: saturate(160%) blur(16px);
+  -webkit-backdrop-filter: saturate(160%) blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
   transition: background .35s ease, box-shadow .35s ease, border-color .35s ease, backdrop-filter .35s ease;
-  border-bottom: 1px solid transparent;
 }
 .nav-wrap.scrolled {
-  background: rgba(255, 250, 238, 0.45);
+  background: rgba(255, 250, 238, 0.68);
   backdrop-filter: saturate(180%) blur(22px);
   -webkit-backdrop-filter: saturate(180%) blur(22px);
-  border-bottom-color: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 8px 32px -24px rgba(60, 40, 10, 0.2),
+  border-bottom-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 32px -22px rgba(60, 40, 10, 0.2),
               inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 .nav-progress {

@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { Nav } from "@/components/Nav";
@@ -118,6 +119,10 @@ const SERVICE_LD = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // Nonce is set by middleware.ts and forwarded via x-nonce request header.
+  // Inline scripts that should pass the strict CSP must carry this nonce.
+  const nonce = headers().get("x-nonce") ?? undefined;
+
   return (
     <html
       lang="de"
@@ -127,10 +132,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <script
           type="application/ld+json"
+          nonce={nonce}
           dangerouslySetInnerHTML={{ __html: JSON.stringify(PERSON_LD) }}
         />
         <script
           type="application/ld+json"
+          nonce={nonce}
           dangerouslySetInnerHTML={{ __html: JSON.stringify(SERVICE_LD) }}
         />
         <LangProvider>

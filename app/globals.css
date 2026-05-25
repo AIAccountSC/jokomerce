@@ -39,32 +39,44 @@ button { font: inherit; cursor: pointer; }
 h1, h2, h3, h4, p { margin: 0; }
 img { display: block; max-width: 100%; }
 
-/* Warm gradient layer behind everything — stronger so glass surfaces
-   have real color variation to refract through. */
+/* Saturated background — glass surfaces need actual color variation
+   to refract. Stronger amber + peach blobs scattered across the page
+   so blur reveals real movement of color through every card. */
 body::before {
   content: ""; position: fixed; inset: 0;
   background:
-    radial-gradient(1200px 600px at 100% -100px, #F8D484 0%, transparent 60%),
-    radial-gradient(900px 600px at -10% 50%, #FBF1D5 0%, transparent 60%),
-    radial-gradient(800px 500px at 90% 80%, rgba(242, 167, 24, 0.18) 0%, transparent 65%);
+    radial-gradient(900px 700px at 100% -100px, #F4B658 0%, transparent 55%),
+    radial-gradient(700px 600px at -10% 30%, #F8D58A 0%, transparent 60%),
+    radial-gradient(800px 500px at 90% 70%, rgba(242, 167, 24, 0.35) 0%, transparent 60%),
+    radial-gradient(600px 500px at 30% 100%, #F9C26B 0%, transparent 55%),
+    radial-gradient(500px 400px at 70% 40%, rgba(255, 200, 100, 0.3) 0%, transparent 60%);
   pointer-events: none; z-index: -1;
 }
 
-/* ===== GLASS TOKENS =====
-   Used by every card/pill/chip surface across the page. Cream/amber
-   semi-translucent fill + saturate-and-blur backdrop = frosted look
-   that picks up the body gradient. */
+/* ===== LIQUID-GLASS TOKENS =====
+   High transparency + strong saturate-and-blur backdrop. The whole
+   point is that warm body color shows through visibly. */
 :root {
-  --glass-bg:      rgba(255, 252, 244, 0.55);
-  --glass-bg-hi:   rgba(255, 252, 244, 0.72);   /* hover / contrast state */
-  --glass-bg-lo:   rgba(255, 252, 244, 0.42);   /* subtle pills */
-  --glass-border:  rgba(232, 221, 196, 0.65);
-  --glass-blur:    saturate(180%) blur(18px);
-  --glass-blur-lo: saturate(160%) blur(10px);
-  --glass-shadow:  0 12px 36px -22px rgba(60, 40, 10, 0.22),
-                   inset 0 1px 0 rgba(255, 255, 255, 0.45);
-  --glass-shadow-lg: 0 30px 60px -32px rgba(60, 40, 10, 0.22),
-                     inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  --glass-bg:      rgba(255, 250, 238, 0.30);    /* main surface */
+  --glass-bg-hi:   rgba(255, 250, 238, 0.42);    /* hover / contrast */
+  --glass-bg-lo:   rgba(255, 250, 238, 0.18);    /* subtle pills/chips */
+  --glass-border:  rgba(255, 255, 255, 0.45);    /* highlight edge */
+  --glass-blur:    saturate(180%) blur(22px);
+  --glass-blur-lo: saturate(160%) blur(14px);
+  /* Liquid edge: bright top highlight (the "lens curl"), soft drop, */
+  /* and a 1-px outer rim of pure white for the specular outline.    */
+  --glass-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.10),
+    0 8px 32px -12px rgba(60, 40, 10, 0.18),
+    0 2px 8px -2px rgba(60, 40, 10, 0.08);
+  --glass-shadow-lg:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -2px 0 rgba(255, 255, 255, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 28px 60px -28px rgba(60, 40, 10, 0.28),
+    0 8px 24px -8px rgba(60, 40, 10, 0.12);
 }
 
 /* Thin black top bar */
@@ -78,11 +90,12 @@ body::before {
   border-bottom: 1px solid transparent;
 }
 .nav-wrap.scrolled {
-  background: rgba(248, 239, 222, 0.78);
-  backdrop-filter: saturate(140%) blur(14px);
-  -webkit-backdrop-filter: saturate(140%) blur(14px);
-  border-bottom-color: var(--rule);
-  box-shadow: 0 8px 32px -24px rgba(60, 40, 10, 0.25);
+  background: rgba(255, 250, 238, 0.45);
+  backdrop-filter: saturate(180%) blur(22px);
+  -webkit-backdrop-filter: saturate(180%) blur(22px);
+  border-bottom-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px -24px rgba(60, 40, 10, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 .nav-progress {
   position: fixed; top: 0; left: 0; right: 0;
@@ -212,7 +225,7 @@ section { padding: 72px 0; position: relative; }
   border-radius: 28px;
   aspect-ratio: 4/4.4;
   overflow: hidden;
-  box-shadow: 0 30px 60px -30px rgba(60, 40, 10, 0.18);
+  box-shadow: var(--glass-shadow-lg);
 }
 .portrait-img {
   position: absolute; inset: 0;
@@ -278,9 +291,8 @@ section { padding: 72px 0; position: relative; }
 .card:hover {
   transform: translateY(-2px);
   background: var(--glass-bg-hi);
-  box-shadow: 0 22px 44px -22px rgba(60, 40, 10, 0.24),
-              inset 0 1px 0 rgba(255, 255, 255, 0.55);
-  border-color: #DBC9A1;
+  box-shadow: var(--glass-shadow-lg);
+  border-color: rgba(255, 255, 255, 0.6);
 }
 .card .num-circle {
   width: 34px; height: 34px; border-radius: 50%;
@@ -443,7 +455,7 @@ section { padding: 72px 0; position: relative; }
   border-radius: 24px;
   aspect-ratio: 4/4.6;
   position: relative; overflow: hidden;
-  box-shadow: 0 28px 56px -30px rgba(60, 40, 10, 0.16);
+  box-shadow: var(--glass-shadow-lg);
 }
 .about-photo-img {
   position: absolute; inset: 0;

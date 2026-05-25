@@ -1,54 +1,48 @@
-"use client";
-
 import Link from "next/link";
-import { useT } from "@/lib/i18n";
-import { COPY } from "@/lib/copy";
 
 export function Footer() {
-  const t = useT();
   return (
     <footer className="site-footer">
-      <div className="ft-grid">
-        <div>
-          <Link href="/" className="brand">
-            Jokomerce
+      <div className="foot-grid">
+        <div className="col about-col">
+          <Link href="/#top" className="brand">
+            <span className="mark">J</span>
+            <span className="brand-text">
+              <span className="name">Jokomerce</span>
+              <span className="sub">MARKETPLACE · D2C · P&amp;L</span>
+            </span>
           </Link>
-          <p style={{ marginTop: 16, maxWidth: "36ch", fontSize: 14, lineHeight: 1.6 }}>
-            {t(COPY.footer.blurb)}
-          </p>
+          <p>Head of Marketplace &amp; CMO auf Zeit für Marken, Händler und D2C-Brands.</p>
         </div>
         <div className="col">
-          <h4>{t(COPY.footer.services)}</h4>
-          <Link href="/leistungen/head-of-marketplace">Head of Marketplace</Link>
-          <Link href="/leistungen/amazon-growth">Amazon Growth</Link>
-          <Link href="/leistungen/multichannel">Multichannel</Link>
-          <Link href="/leistungen/shopify-d2c">Shopify &amp; D2C</Link>
-          <Link href="/leistungen">{t(COPY.footer.all)}</Link>
+          <h4>Leistungen</h4>
+          <Link href="/#leistungen">Head of Marketplace</Link>
+          <Link href="/#leistungen">Amazon Growth</Link>
+          <Link href="/#leistungen">Multichannel</Link>
+          <Link href="/#leistungen">Shopify &amp; D2C</Link>
         </div>
         <div className="col">
-          <h4>{t(COPY.footer.site)}</h4>
-          <Link href="/">{t(COPY.footer.home)}</Link>
-          <Link href="/#cases">{t(COPY.footer.cases)}</Link>
-          <Link href="/about">{t(COPY.footer.about)}</Link>
-          <Link href="/contact">{t(COPY.footer.contact)}</Link>
+          <h4>Mehr</h4>
+          <Link href="/#about">Über mich</Link>
+          <Link href="/#cases">Cases</Link>
+          <Link href="/#faq">FAQ</Link>
+          <Link href="/#kontakt">Kontakt</Link>
         </div>
         <div className="col">
-          <h4>{t(COPY.footer.contact)}</h4>
+          <h4>Kontakt</h4>
           <a href="mailto:hello@jokomerce.de">hello@jokomerce.de</a>
           <a
             href="https://www.linkedin.com/in/joachim-heidel-803b36134/"
             target="_blank"
             rel="noopener noreferrer"
           >
-            LinkedIn ↗
+            LinkedIn
           </a>
-          <a href="#">{t(COPY.footer.imprint)}</a>
-          <a href="#">{t(COPY.footer.privacy)}</a>
         </div>
       </div>
-      <div className="copy">
-        <span>{t(COPY.footer.copy)}</span>
-        <span>{t(COPY.footer.tag)}</span>
+      <div className="foot-bottom">
+        <span>© 2026 Jokomerce · Joachim Heidel</span>
+        <span>Impressum · Datenschutz</span>
       </div>
     </footer>
   );

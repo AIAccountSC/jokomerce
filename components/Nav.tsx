@@ -2,21 +2,16 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import { useLang } from "@/lib/i18n";
-import { AccentSwitcher } from "./AccentSwitcher";
 
 const LINKS = [
-  { href: "/leistungen", de: "Leistungen", en: "Services" },
-  { href: "/#prozess", de: "Prozess", en: "Process" },
-  { href: "/#cases", de: "Cases", en: "Cases" },
-  { href: "/about", de: "Über mich", en: "About" },
-  { href: "/#faq", de: "FAQ", en: "FAQ" },
-  { href: "/contact", de: "Kontakt", en: "Contact" },
+  { href: "/#leistungen", label: "Leistungen" },
+  { href: "/#cases", label: "Cases" },
+  { href: "/#about", label: "Über mich" },
+  { href: "/#kontakt", label: "Kontakt" },
 ];
 
 export function Nav() {
-  const { lang, setLang } = useLang();
-  const navRef = useRef<HTMLElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
   const progRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -25,7 +20,7 @@ export function Nav() {
       const max = doc.scrollHeight - window.innerHeight;
       const s = max > 0 ? window.scrollY / max : 0;
       progRef.current?.style.setProperty("--scroll", String(s));
-      navRef.current?.classList.toggle("is-scrolled", window.scrollY > 12);
+      wrapRef.current?.classList.toggle("scrolled", window.scrollY > 24);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
@@ -35,44 +30,27 @@ export function Nav() {
   return (
     <>
       <div ref={progRef} className="nav-progress" />
-      <nav ref={navRef} className="nav">
-        <div className="nav-inner">
-          <Link href="/" className="logo">
-            Jokomerce
+      <div ref={wrapRef} className="nav-wrap">
+        <nav className="nav">
+          <Link href="/#top" className="brand">
+            <span className="mark">J</span>
+            <span className="brand-text">
+              <span className="name">Jokomerce</span>
+              <span className="sub">MARKETPLACE · D2C · P&amp;L</span>
+            </span>
           </Link>
           <div className="nav-links">
             {LINKS.map((l) => (
               <Link key={l.href} href={l.href}>
-                {lang === "en" ? l.en : l.de}
+                {l.label}
               </Link>
             ))}
           </div>
-          <div className="nav-right">
-            <AccentSwitcher />
-            <div className="lang" role="group" aria-label="Language">
-              <button
-                type="button"
-                onClick={() => setLang("de")}
-                className={lang === "de" ? "on" : ""}
-                aria-pressed={lang === "de"}
-              >
-                DE
-              </button>
-              <button
-                type="button"
-                onClick={() => setLang("en")}
-                className={lang === "en" ? "on" : ""}
-                aria-pressed={lang === "en"}
-              >
-                EN
-              </button>
-            </div>
-            <Link className="cta-sm" href="/contact">
-              <span>{lang === "en" ? "Book a call" : "Erstgespräch"}</span> →
-            </Link>
-          </div>
-        </div>
-      </nav>
+          <Link href="/#kontakt" className="cta-pill">
+            Erstgespräch anfragen
+          </Link>
+        </nav>
+      </div>
     </>
   );
 }

@@ -1,968 +1,616 @@
-"use client";
-
-import Link from "next/link";
 import Image from "next/image";
-import { IconBox } from "@/components/Icon";
-import { Marquee } from "@/components/Marquee";
-import { ProcessSection } from "@/components/ProcessSection";
-import { FinalCTA } from "@/components/FinalCTA";
-import { KPI, HeadlineReveal } from "@/components/Reveals";
-import { useT } from "@/lib/i18n";
-import { COPY } from "@/lib/copy";
-import { JOACHIM, JOACHIM_W, JOACHIM_H } from "@/lib/photos";
+import Link from "next/link";
+import { Icon, type IconName } from "@/components/Icon";
+import { JOACHIM } from "@/lib/photos";
+import { Reveal, RevealOnView } from "@/components/RevealOnView";
+import { ContactForm } from "@/components/ContactForm";
+
+/* =========================================================
+   Jokomerce v2 — onepager
+   Pixel-faithful port of Jokomerce.html v2 design handoff.
+   Content matches the "Neue passende Copy" brief 1:1.
+   ========================================================= */
+
+const MARQUEE: { label: string; logo?: string }[] = [
+  { label: "Amazon", logo: "/brands/amazon.svg" },
+  { label: "Otto" },
+  { label: "Kaufland" },
+  { label: "eBay", logo: "/brands/ebay.svg" },
+  { label: "bol.com" },
+  { label: "Walmart", logo: "/brands/walmart.svg" },
+  { label: "Shopify", logo: "/brands/shopify.svg" },
+  { label: "Google Ads", logo: "/brands/googleads.svg" },
+  { label: "Zendesk", logo: "/brands/zendesk.svg" },
+  { label: "Plentymarkets" },
+  { label: "Billbee" },
+  { label: "NetSuite" },
+  { label: "JTL" },
+];
 
 const PROBLEMS = [
+  "Amazon läuft, aber die Marge ist schlecht – TACOS/ACOS, Preise und Kostenstruktur passen nicht zusammen.",
+  "Wir wollen Otto, Kaufland, Walmart & Co. aufbauen, aber es fehlt ein klares Setup und jemand, der es wirklich durchzieht.",
+  "Wir brauchen 30–200 neue Produkte im Katalog – aber Katalogstruktur, Content und Prozesse sind nicht skalierbar.",
+  "Unser Shopify-Shop wächst nicht, Conversion ist zu niedrig und Google Ads performt nicht stabil.",
+  "Operativ brennt es: ERP, Workflows, Customer Support und Reporting sind Flickwerk.",
+];
+
+const AUDIENCE: { icon: IconName; title: string }[] = [
+  { icon: "bag", title: "Marken / Hersteller mit Wachstum auf Amazon & Marktplätzen" },
+  { icon: "globe", title: "Händler mit Multichannel-Expansion (DE/EU/US)" },
+  { icon: "store", title: "D2C-Brands, die Shopify + Performance Marketing skalieren wollen" },
+  { icon: "portfolio", title: "Aggregatoren / Portfolio-Owner, die P&L-Ownership und Execution brauchen" },
+];
+
+type BrandChip = { name: string; logo?: string };
+
+const SERVICES: {
+  icon: IconName;
+  title: string;
+  body: string;
+  brands?: BrandChip[];
+}[] = [
   {
-    href: "/leistungen/amazon-growth",
-    num: "01",
-    cat: { de: "Profitabilität", en: "Profitability" },
-    icon: "trend" as const,
-    title: {
-      de: <><span className="accent">Amazon läuft</span> — aber die Marge stimmt nicht.</>,
-      en: <><span className="accent">Amazon is running</span> — but the margin isn&apos;t.</>,
-    },
-    desc: {
-      de: "TACOS / ACOS, Preise und Kostenstruktur passen nicht zusammen. Wachstum ja, Profit nein.",
-      en: "TACOS / ACOS, pricing and cost structure don't add up. Growth yes, profit no.",
-    },
-    tags: ["TACOS", "Pricing", "Contribution Margin"],
-    link: { de: "Lösung: Amazon Growth →", en: "Solution: Amazon Growth →" },
+    icon: "pl",
+    title: "Head of Marketplace / Interim CMO",
+    body: "End-to-end Verantwortung für Umsatz, Marge und Wachstum über alle relevanten Marktplätze — inklusive P&L, Forecasting und Teamsteuerung.",
   },
   {
-    href: "/leistungen/multichannel",
-    num: "02",
-    cat: { de: "Expansion", en: "Expansion" },
-    icon: "grid" as const,
-    title: {
-      de: <><span className="accent">Otto, Kaufland, Walmart</span> — wir wollen rauf, aber niemand zieht es durch.</>,
-      en: <><span className="accent">Otto, Kaufland, Walmart</span> — we want to be there, but nobody pulls it through.</>,
-    },
-    desc: {
-      de: "Setup, Prozesse und Content für weitere Marktplätze fehlen — und es fehlt jemand, der es operativ verantwortet.",
-      en: "Setup, processes and content for additional marketplaces aren't there — and no one to actually own it.",
-    },
-    tags: ["Otto", "Kaufland", "Walmart", "bol.com"],
-    link: { de: "Lösung: Multichannel Expansion →", en: "Solution: Multichannel Expansion →" },
+    icon: "trend",
+    title: "Amazon Growth & Catalogue Excellence",
+    body: "Katalog-Rebuild, SEO- & Conversion-Content, Internationalisierung und Ads-Struktur — damit Amazon als Wachstumskanal profitabel skaliert.",
+    brands: [{ name: "Amazon", logo: "/brands/amazon.svg" }],
   },
   {
-    href: "/leistungen/produktlaunch",
-    num: "03",
-    cat: { de: "Katalog", en: "Catalog" },
-    icon: "boxes" as const,
-    title: {
-      de: <><span className="accent">30–200 neue SKUs</span> sollen in den Katalog — der trägt das nicht.</>,
-      en: <><span className="accent">30–200 new SKUs</span> need to enter the catalog — it can&apos;t scale that.</>,
-    },
-    desc: {
-      de: "Katalog-Architektur, Content-Produktion und Prozesse skalieren nicht. Jedes neue Produkt wird zum Einzelprojekt.",
-      en: "Catalog architecture, content production and processes don't scale. Every new product becomes a manual project.",
-    },
-    tags: ["Catalog", "Variations", "Content Ops"],
-    link: { de: "Lösung: Produktlaunch →", en: "Solution: Product Launch →" },
+    icon: "rocket",
+    title: "Produktlaunch End-to-End",
+    body: "Von der Produktidee über Marktvalidierung und Forecasts bis zum Launch-Setup und der Skalierung nach Volumen- und Profit-Zielen.",
   },
   {
-    href: "/leistungen/shopify-d2c",
-    num: "04",
-    cat: { de: "D2C", en: "D2C" },
-    icon: "bag" as const,
-    title: {
-      de: <><span className="accent">Shopify wächst nicht</span>, Conversion zu niedrig, Google Ads instabil.</>,
-      en: <><span className="accent">Shopify isn&apos;t growing</span>, conversion is low, Google Ads unstable.</>,
-    },
-    desc: {
-      de: "Tracking-Lücken, schwache Landingpages, Ads-Struktur ad-hoc gewachsen. Der Shop läuft — aber er skaliert nicht.",
-      en: "Tracking gaps, weak landing pages, ad structure built ad-hoc. The shop runs — but doesn't compound.",
-    },
-    tags: ["Shopify", "Google Ads", "CRO", "Tracking"],
-    link: { de: "Lösung: Shopify & D2C →", en: "Solution: Shopify & D2C →" },
+    icon: "grid",
+    title: "Multichannel Expansion (Otto, Kaufland, eBay, bol.com, Walmart …)",
+    body: "Aufbau und Steuerung weiterer Marktplätze — mit sauberer Katalog-Architektur, Preislogik, Inventory- und Promotions-Prozessen.",
+    brands: [
+      { name: "Otto" },
+      { name: "Kaufland" },
+      { name: "eBay", logo: "/brands/ebay.svg" },
+      { name: "bol.com" },
+      { name: "Walmart", logo: "/brands/walmart.svg" },
+    ],
   },
   {
-    href: "/leistungen/operations-erp",
-    num: "05",
-    cat: { de: "Operations", en: "Operations" },
-    icon: "gear" as const,
-    title: {
-      de: <><span className="accent">Operativ brennt es:</span> ERP, Workflows, Support, Reporting.</>,
-      en: <><span className="accent">Operationally, it&apos;s on fire:</span> ERP, workflows, support, reporting.</>,
-    },
-    desc: {
-      de: "ERP, Workflows, Customer Support und Reporting sind Flickwerk. Jeder Kanal anders, jedes Reporting Handarbeit.",
-      en: "ERP, fulfillment, customer support and reporting are patchwork. Every channel handled differently — every report assembled by hand.",
-    },
-    tags: ["ERP", "Plenty / Billbee", "Reporting"],
-    link: { de: "Lösung: Operations & ERP →", en: "Solution: Operations & ERP →" },
+    icon: "bag",
+    title: "Shopify & D2C Growth (inkl. Google Ads)",
+    body: "Shopify-Setup/Optimierung, Google Ads, Conversion-Optimierung und SEO — damit dein Shop zur Marken- und Profitmaschine wird.",
+    brands: [
+      { name: "Shopify", logo: "/brands/shopify.svg" },
+      { name: "Google Ads", logo: "/brands/googleads.svg" },
+    ],
   },
   {
-    href: "/leistungen/head-of-marketplace",
-    num: "06",
-    cat: { de: "Verantwortung", en: "Ownership" },
-    icon: "cmo" as const,
-    title: {
-      de: <><span className="accent">Beratungs-Decks</span> liegen im Regal — Umsetzung fehlt.</>,
-      en: <><span className="accent">Strategy decks</span> sit on the shelf — execution is missing.</>,
-    },
-    desc: {
-      de: "Die Strategie ist klar. Es fehlt jemand, der die Umsetzung wirklich Woche für Woche verantwortet.",
-      en: "The strategy is clear. What's missing is someone who actually owns the implementation week by week.",
-    },
-    tags: ["Interim CMO", "P&L Owner", "Weekly Cadence"],
-    link: { de: "Lösung: Head of Marketplace →", en: "Solution: Head of Marketplace →" },
+    icon: "gear",
+    title: "Operations, ERP & Tooling",
+    body: "Prozesse, Datenfluss und Automatisierung über ERP/Tools (z. B. Plentymarkets, Billbee, NetSuite, JTL) — damit Wachstum nicht im Operativen scheitert.",
+    brands: [{ name: "Plentymarkets" }, { name: "Billbee" }, { name: "NetSuite" }, { name: "JTL" }],
+  },
+  {
+    icon: "chat",
+    title: "Customer Support Setup (Zendesk)",
+    body: "Aufbau eines skalierbaren, multichannel-fähigen Customer Support Teams in Zendesk — inkl. Prozesse, SLAs und Qualitätsstandards.",
+    brands: [{ name: "Zendesk", logo: "/brands/zendesk.svg" }],
+  },
+  {
+    icon: "spark",
+    title: "AI Workflows & Agentic Execution",
+    body: "Strukturen und Workflows, um Content, Launches und Reporting mit AI/Agenten schneller und wiederholbar umzusetzen.",
   },
 ];
 
-const AUDIENCE = [
+const USPS: { icon: IconName; title: string; body: string }[] = [
+  { icon: "pl", title: "P&L-first", body: "Wachstum ohne Profit ist kein Wachstum." },
+  { icon: "check", title: "End-to-end Execution", body: "Strategie + operative Umsetzung statt PowerPoint." },
+  { icon: "repeat", title: "Skalierbare Systeme", body: "Prozesse, SOPs und Automatisierung statt Ad-hoc-Firefighting." },
+  { icon: "network", title: "Multichannel-Realität", body: "Amazon + weitere Marktplätze + D2C im Zusammenspiel." },
+  { icon: "globe", title: "International", body: "Erfahrung in DE und US-Setups." },
+];
+
+const PHASES = [
   {
-    icon: "factory" as const,
-    h3: { de: "Marken & Hersteller", en: "Brands & manufacturers" },
-    p: {
-      de: "mit Wachstum auf Amazon & weiteren Marktplätzen — und Bedarf an echter operativer Verantwortung.",
-      en: "growing on Amazon and additional marketplaces — and need a real operator, not an advisor.",
-    },
+    step: "Phase 01",
+    title: "Audit & Ziele",
+    body: "Review von P&L, Katalog, Content, Ads, Prozessen und Tools. Definition von Zielen und KPIs (Umsatz, Marge, TACOS, Rankings, etc.).",
   },
   {
-    icon: "boxes" as const,
-    h3: { de: "Multichannel-Händler", en: "Multichannel merchants" },
-    p: {
-      de: "mit Expansion DE / EU / US — Otto, Kaufland, Walmart, bol.com — über Amazon hinaus.",
-      en: "expanding across DE, EU and US — Otto, Kaufland, Walmart, bol.com — beyond Amazon.",
-    },
+    step: "Phase 02",
+    title: "Plan & Priorisierung",
+    body: "Roadmap mit klaren Prioritäten: welche Kanäle, Produkte und Hebel zuerst — inklusive Ressourcen- und Budgetplanung.",
   },
   {
-    icon: "store" as const,
-    h3: { de: "D2C-Brands", en: "D2C brands" },
-    p: {
-      de: "die Shopify und Performance Marketing skalieren — CRO, Google Ads und sauberes Tracking.",
-      en: "scaling Shopify and performance marketing — CRO, Google Ads and clean tracking.",
-    },
+    step: "Phase 03",
+    title: "Umsetzung",
+    body: "Operative Umsetzung in den vereinbarten Bereichen: Katalog, Content, Ads, Launches, ERP/Workflows, Support, AI-Workflows.",
   },
   {
-    icon: "portfolio" as const,
-    h3: { de: "Aggregatoren / Portfolio-Owner", en: "Aggregators / portfolio owners" },
-    p: {
-      de: "die P&L-Ownership und Execution über mehrere Marken brauchen — kein weiteres Deck.",
-      en: "need P&L ownership and execution across multiple brands — not another deck.",
-    },
+    step: "Phase 04",
+    title: "Skalierung & Governance",
+    body: "Aufbau von Reporting, SOPs und Automatisierung, damit das Wachstum stabil und steuerbar bleibt.",
   },
 ];
 
-const SERVICES = [
+const SKILLS = [
+  "Marketplace Growth & Profitability (P&L)",
+  "Multichannel-Expansion (Amazon, Otto, Kaufland, eBay, bol.com, Walmart …)",
+  "Shopify & Google Ads (D2C Growth)",
+  "Katalog-Architektur & Content-Excellence",
+  "ERP/Tooling & Operations-Setup",
+  "Customer Support (Zendesk) & AI-Workflows",
+];
+
+const FAQ = [
   {
-    href: "/leistungen/head-of-marketplace",
-    icon: "cmo" as const,
-    img: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=900&h=560&fit=crop&q=80",
-    title: { de: ["Head of Marketplace /", "Interim CMO"], en: ["Head of Marketplace /", "Interim CMO"] },
-    desc: {
-      de: "End-to-end Verantwortung für Umsatz, Marge und Wachstum über alle relevanten Marktplätze — inklusive P&L, Forecasting und Teamsteuerung.",
-      en: "End-to-end ownership of revenue, margin and growth across all relevant marketplaces — including P&L, forecasting and team management.",
-    },
-    platforms: "Strategie · P&L · Forecasting",
+    q: "In welcher Rolle arbeitest du typischerweise?",
+    a: (
+      <>
+        Meistens als <b>Head of Marketplace oder CMO auf Zeit</b> — mit klarer P&amp;L-Verantwortung und direkter
+        Einbindung in dein Team.
+      </>
+    ),
   },
   {
-    href: "/leistungen/amazon-growth",
-    icon: "trend" as const,
-    img: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=900&h=560&fit=crop&q=80",
-    title: { de: ["Amazon Growth &", "Catalogue Excellence"], en: ["Amazon Growth &", "Catalogue Excellence"] },
-    desc: {
-      de: "Katalog-Rebuild, SEO- & Conversion-Content, Internationalisierung und Ads-Struktur — damit Amazon profitabel skaliert.",
-      en: "Catalog rebuild, SEO & conversion content, internationalization and ad structure — so Amazon scales profitably.",
-    },
-    platforms: "Amazon EU · US · Global",
+    q: "Arbeitest du nur mit Amazon-Fokus oder auch Multichannel?",
+    a: "Beides. Viele Projekte starten mit Amazon, werden dann aber auf weitere Marktplätze und D2C (Shopify) erweitert.",
   },
   {
-    href: "/leistungen/produktlaunch",
-    icon: "rocket" as const,
-    img: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=900&h=560&fit=crop&q=80",
-    title: { de: ["Produktlaunch", "End-to-End"], en: ["Product Launch", "End-to-End"] },
-    desc: {
-      de: "Von der Produktidee über Marktvalidierung und Forecasts bis zum Launch-Setup und der Skalierung nach Volumen- und Profit-Zielen.",
-      en: "From product idea through market validation and forecasts to launch setup and scaling against volume and profit targets.",
-    },
-    platforms: "Idee → Launch → Scale",
+    q: "Wie startest du typischerweise in ein Projekt?",
+    a: (
+      <>
+        In der Regel mit einem <b>Audit</b> (P&amp;L, Katalog, Ads, Prozesse), aus dem eine klare Roadmap entsteht.
+        Danach entscheiden wir, ob wir in einem Projekt-Setup oder als laufende Rolle zusammenarbeiten.
+      </>
+    ),
   },
   {
-    href: "/leistungen/multichannel",
-    icon: "grid" as const,
-    img: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=900&h=560&fit=crop&q=80",
-    title: { de: ["Multichannel", "Expansion"], en: ["Multichannel", "Expansion"] },
-    desc: {
-      de: "Aufbau und Steuerung weiterer Marktplätze — saubere Katalog-Architektur, Preislogik, Inventory- und Promo-Prozesse.",
-      en: "Build and run additional marketplaces — clean catalog architecture, pricing logic, inventory and promo processes.",
-    },
-    platforms: "Otto · Kaufland · Walmart · bol.com",
+    q: "Arbeitest du remote oder vor Ort?",
+    a: "Überwiegend remote, mit punktuellen Vor-Ort-Terminen, wenn es für Workshops oder Teamaufbau sinnvoll ist.",
   },
   {
-    href: "/leistungen/shopify-d2c",
-    icon: "bag" as const,
-    img: "https://images.unsplash.com/photo-1517292987719-0369a794ec0f?w=900&h=560&fit=crop&q=80",
-    title: { de: ["Shopify &", "D2C Growth"], en: ["Shopify &", "D2C Growth"] },
-    desc: {
-      de: "Shopify-Setup/Optimierung, Google Ads, Conversion-Optimierung und SEO — damit dein Shop zur Marken- und Profitmaschine wird.",
-      en: "Shopify setup/optimization, Google Ads, conversion optimization and SEO — so your shop becomes a brand and profit engine.",
-    },
-    platforms: "Shopify · Google Ads · CRO · SEO",
-  },
-  {
-    href: "/leistungen/operations-erp",
-    icon: "gear" as const,
-    img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&h=560&fit=crop&q=80",
-    title: { de: ["Operations, ERP", "& Tooling"], en: ["Operations, ERP", "& Tooling"] },
-    desc: {
-      de: "Prozesse, Datenfluss und Automatisierung über ERP / Tools — damit Wachstum nicht im Operativen scheitert.",
-      en: "Processes, data flow and automation via ERP / tools — so growth doesn't fail in the operational layer.",
-    },
-    platforms: "Plenty · Billbee · NetSuite · JTL",
-  },
-  {
-    href: "/leistungen/customer-support",
-    icon: "chat" as const,
-    img: "https://images.unsplash.com/photo-1553775282-20af80779df7?w=900&h=560&fit=crop&q=80",
-    title: { de: ["Customer Support", "Setup (Zendesk)"], en: ["Customer Support", "Setup (Zendesk)"] },
-    desc: {
-      de: "Skalierbares, multichannel-fähiges Customer Support Team in Zendesk — Prozesse, SLAs und Qualitätsstandards.",
-      en: "Scalable, multichannel customer support team in Zendesk — processes, SLAs and quality standards.",
-    },
-    platforms: "Zendesk · Multilingual · SLAs",
-  },
-  {
-    href: "/leistungen/ai-workflows",
-    icon: "spark" as const,
-    img: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=900&h=560&fit=crop&q=80",
-    title: { de: ["AI Workflows &", "Agentic Execution"], en: ["AI Workflows &", "Agentic Execution"] },
-    desc: {
-      de: "Strukturen und Workflows, um Content, Launches und Reporting mit AI / Agenten schneller und wiederholbar umzusetzen.",
-      en: "Structures and workflows to ship content, launches and reporting with AI / agents — faster and repeatable.",
-    },
-    platforms: "Content · Launches · Reporting",
+    q: "Wie sieht das Preismodell aus?",
+    a: (
+      <>
+        In der Regel auf <b>Retainer-Basis</b>, abgestimmt auf Umfang und Verantwortung. Im Erstgespräch klären wir,
+        was für dein Setup sinnvoll ist.
+      </>
+    ),
   },
 ];
 
-const VS_ROWS = [
-  {
-    num: "01",
-    cat: { de: "P&L-First", en: "P&L-first" },
-    them: {
-      de: "Vanity-Metriken: Ad-Spend, Sessions, ROAS isoliert.",
-      en: "Vanity metrics: ad spend, sessions, ROAS in isolation.",
-    },
-    me: {
-      icon: "pl" as const,
-      html: {
-        de: <>Jede Entscheidung gegen <b>Marge und Contribution</b> gemessen — nie isolierte Klicks.</>,
-        en: <>Every decision benchmarked against <b>margin and contribution</b> — never standalone clicks.</>,
-      },
-    },
-  },
-  {
-    num: "02",
-    cat: { de: "Umsetzung", en: "Execution" },
-    them: {
-      de: "PowerPoint-Übertrag an eine Agentur, die es nicht durchzieht.",
-      en: "PowerPoint hand-off to an agency that won't get it done.",
-    },
-    me: {
-      icon: "check" as const,
-      html: {
-        de: <>Strategie und <b>Execution in einer Person</b>. Wöchentlicher Takt auf die P&amp;L.</>,
-        en: <><b>Strategy + execution in one person.</b> Weekly cadence on the P&amp;L.</>,
-      },
-    },
-  },
-  {
-    num: "03",
-    cat: { de: "Systeme", en: "Systems" },
-    them: {
-      de: "Ad-hoc Firefighting. Jeder Win verschwindet mit dem Berater.",
-      en: "Ad-hoc firefighting. Every win disappears with the consultant.",
-    },
-    me: {
-      icon: "repeat" as const,
-      html: {
-        de: <>Prozesse, SOPs und Automatisierung. <b>Wins werden wiederverwendbar.</b> Chaos wird abgebaut.</>,
-        en: <>Processes, SOPs and automation. <b>Wins compound.</b> Chaos retired.</>,
-      },
-    },
-  },
-  {
-    num: "04",
-    cat: { de: "Multichannel", en: "Multichannel" },
-    them: {
-      de: "Amazon, Otto und Shopify als 3 isolierte Projekte mit 3 Dienstleistern.",
-      en: "Amazon, Otto and Shopify as 3 siloed projects with 3 vendors.",
-    },
-    me: {
-      icon: "network" as const,
-      html: {
-        de: <>Ein <b>System</b> — Marktplätze und D2C zusammen betrieben, ein Reporting.</>,
-        en: <><b>One system</b> — marketplaces and D2C operated together, one reporting layer.</>,
-      },
-    },
-  },
-  {
-    num: "05",
-    cat: { de: "International", en: "International" },
-    them: {
-      de: "Nur DE/EU-Erfahrung. US wird outgesourct oder verschoben.",
-      en: "DE / EU experience only. US gets outsourced or postponed.",
-    },
-    me: {
-      icon: "globe" as const,
-      html: {
-        de: <>Hands-on über <b>DE und US</b> — inkl. Steuer, Fulfillment, Sprache.</>,
-        en: <>Hands-on across <b>DE and US</b> — incl. tax, fulfillment, language realities.</>,
-      },
-    },
-  },
-];
+function BrandLogo({ src, alt }: { src: string; alt: string }) {
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src={src} alt={alt} width={20} height={20} />;
+}
 
 export default function Home() {
-  const t = useT();
-  const lang = t({ de: "de", en: "en" });
-
   return (
-    <>
-      {/* ===== HERO ===== */}
-      <section className="hero" id="top" style={{ borderBottom: 0 }}>
-        <div className="hero-row">
-          <div className="hero-copy">
-            <span className="eyebrow" data-reveal>
-              {t(COPY.home.hero.eyebrow)}
-            </span>
-            <h1
-              className="hero-h1"
-              data-reveal
-              style={{ ["--reveal-delay" as never]: "100ms" }}
-              dangerouslySetInnerHTML={{
-                __html: lang === "en" ? COPY.home.hero.h1En : COPY.home.hero.h1De,
-              }}
-            />
-            <p
-              className="hero-lead"
-              data-reveal
-              style={{ ["--reveal-delay" as never]: "200ms" }}
-              dangerouslySetInnerHTML={{ __html: t(COPY.home.hero.lead) }}
-            />
-            <div
-              className="hero-actions"
-              data-reveal
-              style={{ ["--reveal-delay" as never]: "300ms" }}
-            >
-              <Link className="btn solid" href="/contact">
-                <span>{t(COPY.cta.bookCall)}</span> <span className="arr">→</span>
-              </Link>
-              <a className="btn" href="#leistungen">
-                <span>{t(COPY.cta.viewServices)}</span> <span className="arr">↓</span>
-              </a>
-            </div>
-            <div
-              className="hero-avail"
-              data-reveal
-              style={{ ["--reveal-delay" as never]: "400ms" }}
-            >
-              <span className="ping" />
-              <span>{t(COPY.home.hero.avail)}</span>
-            </div>
-          </div>
-
-          <div className="hero-portrait-wrap" data-reveal style={{ ["--reveal-delay" as never]: "200ms" }}>
-            <div className="hero-portrait">
-              <Image
-                className="photo-img"
-                src={JOACHIM.hero}
-                width={JOACHIM_W}
-                height={JOACHIM_H}
-                alt="Joachim Heidel — Head of Marketplace & Founder, Jokomerce"
-                priority
-                sizes="(max-width: 760px) 100vw, (max-width: 1100px) 360px, 520px"
-              />
-              <div className="name-block">
-                <div>
-                  <div className="n">Joachim Heidel</div>
-                  <div className="r">{t(COPY.home.hero.portraitRole)}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="hero-kpis-strip" data-reveal style={{ ["--reveal-delay" as never]: "500ms" }}>
-          <div className="kpi">
-            <KPI target={1000} suffix="+" />
-            <div className="lbl">{t(COPY.home.hero.kpis.launches)}</div>
-          </div>
-          <div className="kpi">
-            <KPI target={12} suffix="+" />
-            <div className="lbl">{t(COPY.home.hero.kpis.markets)}</div>
-          </div>
-          <div className="kpi">
-            <KPI target={0} display="DE · US" />
-            <div className="lbl">{t(COPY.home.hero.kpis.countries)}</div>
-          </div>
-          <div className="kpi">
-            <KPI target={0} display="P&L" />
-            <div className="lbl">{t(COPY.home.hero.kpis.ownership)}</div>
-          </div>
-        </div>
-      </section>
-
-      <Marquee label={t(COPY.home.marqueeLabel)} />
-
-      {/* ===== TRUST STRIP ===== */}
-      <div className="trust" data-reveal>
-        <div className="trust-label">
-          <b>{t(COPY.home.trust.trusted)}</b>
-          <span>{t(COPY.home.trust.brands)}</span>
-        </div>
-        <div className="trust-logos">
-          <div className="logo-slot"><span className="wordmark wm-kronenburg">Kronenburg</span></div>
-          <div className="logo-slot"><span className="wordmark wm-marwona">Marwona</span></div>
-          <div className="logo-slot"><span className="wordmark wm-plconcepts">PLConcepts</span></div>
-          <div className="logo-slot"><span className="wordmark wm-moonster">Moonster</span></div>
-          <div className="logo-slot"><span className="wordmark wm-wethebrands">WETHEBRANDS_</span></div>
-        </div>
-      </div>
-
-      {/* ===== § 01 — PROBLEM ===== */}
-      <section id="problem">
-        <div className="sec-head">
-          <span className="eyebrow" data-reveal>{t(COPY.home.problem.eyebrow)}</span>
-          <h2
-            className="sec-title"
-            data-reveal
-            style={{ ["--reveal-delay" as never]: "100ms" }}
-            dangerouslySetInnerHTML={{ __html: lang === "en" ? COPY.home.problem.h2En : COPY.home.problem.h2De }}
-          />
-          <p className="sec-intro" style={{ padding: 0, marginTop: 4, maxWidth: "64ch" }} data-reveal>
-            {t(COPY.home.problem.intro)}
-          </p>
-        </div>
-
-        <div className="problem-stats" data-reveal>
-          <div className="pstat">
-            <div className="pstat-num">{t(COPY.home.problem.stats.s1Num)}</div>
-            <div className="pstat-lbl">{t(COPY.home.problem.stats.s1Lbl)}</div>
-          </div>
-          <div className="pstat">
-            <div className="pstat-num">6+</div>
-            <div className="pstat-lbl">{t(COPY.home.problem.stats.s2Lbl)}</div>
-          </div>
-          <div className="pstat">
-            <div className="pstat-num">1</div>
-            <div className="pstat-lbl">{t(COPY.home.problem.stats.s3Lbl)}</div>
-          </div>
-          <div className="pstat">
-            <div className="pstat-num">0</div>
-            <div className="pstat-lbl">{t(COPY.home.problem.stats.s4Lbl)}</div>
-          </div>
-        </div>
-
-        <div className="problem-grid-v2">
-          {PROBLEMS.map((p, i) => (
-            <Link
-              key={p.num}
-              className="pcard"
-              href={p.href}
-              data-reveal
-              style={i % 2 ? ({ ["--reveal-delay" as never]: "80ms" } as never) : undefined}
-            >
-              <div className="pcard-tag">
-                <span className="pcard-tag-num">{p.num}</span>
-                <span className="pcard-tag-cat">{t(p.cat)}</span>
-              </div>
-              <IconBox name={p.icon} />
-              <h3>{t(p.title)}</h3>
-              <p>{t(p.desc)}</p>
-              <div className="pcard-tags">
-                {p.tags.map((tag) => (
-                  <span key={tag} className="ptag">{tag}</span>
-                ))}
-              </div>
-              <div className="pcard-link">{t(p.link)}</div>
-            </Link>
-          ))}
-
-          <div className="problem-cta-row" data-reveal>
-            <div className="pcta-inner">
-              <span className="pcta-eyebrow">{t(COPY.home.problem.cta.eyebrow)}</span>
-              <p
-                dangerouslySetInnerHTML={{
-                  __html: lang === "en" ? COPY.home.problem.cta.textEn : COPY.home.problem.cta.textDe,
-                }}
-              />
-            </div>
-            <Link className="btn solid" href="/contact">
-              <span>{t(COPY.cta.bookCall)}</span> <span className="arr">→</span>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== PULL QUOTE ===== */}
-      <section className="pullquote" id="quote" style={{ borderBottom: 0, paddingTop: 120 }}>
-        <div className="lbl" data-reveal>{t(COPY.home.pull.eyebrow)}</div>
-        <blockquote data-reveal style={{ ["--reveal-delay" as never]: "100ms" }}>
-          <p
-            dangerouslySetInnerHTML={{
-              __html: lang === "en" ? COPY.home.pull.bodyEn : COPY.home.pull.bodyDe,
-            }}
-          />
-          <div className="attr"><b>Joachim Heidel</b> · Jokomerce · 2026</div>
-        </blockquote>
-      </section>
-
-      {/* ===== § 02 — AUDIENCE ===== */}
-      <section id="audience">
-        <div className="sec-head">
-          <span className="eyebrow" data-reveal>{t(COPY.home.audience.eyebrow)}</span>
-          <HeadlineReveal
-            as="h2"
-            className="sec-title"
-            style={{ ["--reveal-delay" as never]: "100ms" } as never}
-          >
-            {t(COPY.home.audience.h2)}
-          </HeadlineReveal>
-        </div>
-
-        <div className="audience">
-          <div
-            className="lead-col"
-            data-reveal
-            dangerouslySetInnerHTML={{
-              __html: `<p>${lang === "en" ? COPY.home.audience.leadEn : COPY.home.audience.leadDe}</p>`,
-            }}
-          />
-          <div className="types">
-            {AUDIENCE.map((a, i) => (
-              <div
-                key={a.h3.de}
-                className="aud"
-                data-reveal
-                style={i % 2 ? ({ ["--reveal-delay" as never]: "80ms" } as never) : undefined}
-              >
-                <div className="aud-icon">
-                  <IconBox name={a.icon} shape="circle" />
-                </div>
-                <h3>{t(a.h3)}</h3>
-                <p>{t(a.p)}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== § 03 — SERVICES ===== */}
-      <section id="leistungen">
-        <div className="sec-head">
-          <span className="eyebrow" data-reveal>{t(COPY.home.services.eyebrow)}</span>
-          <HeadlineReveal
-            as="h2"
-            className="sec-title"
-            style={{ ["--reveal-delay" as never]: "100ms" } as never}
-          >
-            {[
-              <span key="m" className="muted">{t(COPY.home.services.h2Pre)}</span>,
-              t(COPY.home.services.h2Tail),
-            ]}
-          </HeadlineReveal>
-        </div>
-
-        <div className="services-wrap">
-          <div className="services">
-            {SERVICES.map((s, i) => (
-              <Link
-                key={s.href}
-                className="svc"
-                href={s.href}
-                data-reveal
-                style={{ ["--reveal-delay" as never]: `${(i % 4) * 80}ms` } as never}
-              >
-                <div className="svc-img">
-                  <img src={s.img} alt={t(s.title).join(" ")} loading="lazy" />
-                </div>
-                <div className="svc-body">
-                  <IconBox name={s.icon} />
-                  <div className="svc-num"><span className="arr">↗</span></div>
-                  <h3>
-                    {t(s.title)[0]}
-                    <br />
-                    {t(s.title)[1]}
-                  </h3>
-                  <p>{t(s.desc)}</p>
-                  <div className="platforms">{s.platforms}</div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== § 04 — UNTERSCHIED ===== */}
-      <section id="usps">
-        <div className="sec-head">
-          <span className="eyebrow" data-reveal>{t(COPY.home.diff.eyebrow)}</span>
-          <h2
-            className="sec-title"
-            data-reveal
-            style={{ ["--reveal-delay" as never]: "100ms" }}
-            dangerouslySetInnerHTML={{ __html: lang === "en" ? COPY.home.diff.h2En : COPY.home.diff.h2De }}
-          />
-          <p className="sec-intro" data-reveal style={{ ["--reveal-delay" as never]: "200ms" }}>
-            {t(COPY.home.diff.intro)}
-          </p>
-        </div>
-
-        <div className="vs-wrap" data-reveal style={{ ["--reveal-delay" as never]: "200ms" }}>
-          <div className="vs-grid">
-            <div className="vs-col-head">
-              <span className="vs-col-lbl">{t(COPY.home.diff.colThemHead)}</span>
-              <span className="vs-col-tag">{t(COPY.home.diff.colThemTag)}</span>
-            </div>
-            <div className="vs-col-head vs-col-head-me">
-              <span className="vs-col-lbl">
-                <span className="vs-dot" /> {t(COPY.home.diff.colMeHead)}
+    <main id="top">
+      {/* ============== HERO ============== */}
+      <section className="hero">
+        <div className="wrap">
+          <div className="hero-grid">
+            <Reveal>
+              <span className="chip">
+                <span className="dot-amber" />
+                Freelancer · Head of Marketplace / CMO auf Zeit
               </span>
-              <span className="vs-col-tag">{t(COPY.home.diff.colMeTag)}</span>
-            </div>
+              <h1 className="display" style={{ marginTop: 24 }}>
+                Marketplace &amp; D2C Wachstum &mdash; mit echter P&amp;L-Verantwortung.
+              </h1>
+              <p className="lead" style={{ marginTop: 20 }}>
+                Ich baue und skaliere profitable Marketplace- und D2C-Geschäfte end-to-end &mdash; von Produktidee
+                &amp; Forecasting über Katalog &amp; Content bis zu Ads, Prozessen und P&amp;L-Steuerung.
+              </p>
+              <div className="hero-actions">
+                <Link href="#kontakt" className="cta-pill amber">
+                  Erstgespräch anfragen <span aria-hidden="true">→</span>
+                </Link>
+                <Link href="#leistungen" className="cta-pill ghost">
+                  Leistungen ansehen
+                </Link>
+              </div>
+              <div className="trust-pill">
+                <b>1000+ Produktlaunches</b> · Amazon, Otto, Kaufland, eBay, bol.com, Walmart &amp; Shopify
+              </div>
+            </Reveal>
 
-            {VS_ROWS.flatMap((row) => [
-              <div className="vs-row-lbl" key={`lbl-${row.num}`}>
-                <span className="vs-num">{row.num}</span>
-                <span className="vs-cat">{t(row.cat)}</span>
-              </div>,
-              <div className="vs-cell vs-cell-them" key={`them-${row.num}`}>
-                <div className="vs-x">✕</div>
-                <p>{t(row.them)}</p>
-              </div>,
-              <div className="vs-cell vs-cell-me" key={`me-${row.num}`}>
-                <IconBox name={row.me.icon} size="sm" />
-                <p>{t(row.me.html)}</p>
-              </div>,
-            ])}
-          </div>
-
-          <div className="vs-foot" data-reveal>
-            <div className="vs-foot-stat">
-              <div className="vs-foot-num">1<span className="vs-foot-sep">/</span>0</div>
-              <div className="vs-foot-lbl">{t(COPY.home.diff.footStatLbl)}</div>
-            </div>
-            <div className="vs-foot-claim">
-              <p
-                dangerouslySetInnerHTML={{
-                  __html: lang === "en" ? COPY.home.diff.footClaimEn : COPY.home.diff.footClaimDe,
-                }}
-              />
-            </div>
-            <Link className="btn solid" href="/contact" style={{ whiteSpace: "nowrap" }}>
-              <span>{t(COPY.cta.bookCallShort)}</span> <span className="arr">→</span>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== § 05 — PROCESS ===== */}
-      <ProcessSection />
-
-      {/* ===== § 06 — CASES ===== */}
-      <section id="cases">
-        <div className="sec-head">
-          <span className="eyebrow" data-reveal>{t(COPY.home.cases.eyebrow)}</span>
-          <HeadlineReveal
-            as="h2"
-            className="sec-title"
-            style={{ ["--reveal-delay" as never]: "100ms" } as never}
-          >
-            {[
-              <span key="m" className="muted">{t(COPY.home.cases.h2Pre)}</span>,
-              t(COPY.home.cases.h2Tail),
-            ]}
-          </HeadlineReveal>
-        </div>
-
-        <div className="cases-section">
-          <div className="case-logos" data-reveal>
-            <div className="lbl">{t(COPY.home.cases.recent)}</div>
-            <div className="logos">
-              <span>Kronenburg Handel</span>
-              <span>Marwona GmbH</span>
-              <span>PLConcepts GmbH</span>
-              <span>Moonster Products Ltd</span>
-              <span>WETHEBRANDS_</span>
-            </div>
-          </div>
-
-          <div className="case-grid">
-            {[COPY.home.cases.c1, COPY.home.cases.c2].map((c, idx) => (
-              <div
-                key={idx}
-                className="case"
-                data-reveal
-                style={idx ? ({ ["--reveal-delay" as never]: "100ms" } as never) : undefined}
-              >
-                <div className="case-image">
-                  <img
-                    src={
-                      idx === 0
-                        ? "https://images.unsplash.com/photo-1553413077-190dd305871c?w=1200&h=675&fit=crop&q=80"
-                        : "https://images.unsplash.com/photo-1521295121783-8a321d551ad2?w=1200&h=675&fit=crop&q=80"
-                    }
-                    alt={`Case ${idx + 1}`}
-                    loading="lazy"
+            <Reveal delay={120}>
+              <div className="portrait">
+                <div className="portrait-img">
+                  <Image
+                    src={JOACHIM.hero}
+                    width={900}
+                    height={1125}
+                    alt="Joachim Heidel — Head of Marketplace & Founder, Jokomerce"
+                    priority
+                    sizes="(max-width: 980px) 100vw, 520px"
                   />
-                  <span className="badge">CASE / 0{idx + 1}</span>
-                  <span className="badge-2">{t(c.badge)}</span>
                 </div>
-                <div className="case-content">
-                  <h3>{t(c.h3)}</h3>
-                  <div>
-                    {c.rows.map((row) => (
-                      <div className="row" key={row.k.de}>
-                        <span className="k">{t(row.k)}</span>
-                        <span
-                          className={`v${("isResult" in row && row.isResult) ? " result" : ""}`}
-                        >
-                          {t(row.v)}
-                        </span>
-                      </div>
-                    ))}
+                <div className="float-card dark">
+                  <div className="big">P&amp;L</div>
+                  <div className="lbl">
+                    Umsatz, Marge und
+                    <br />
+                    Profitabilität im Fokus
+                  </div>
+                </div>
+                <div className="float-card light">
+                  <div className="eye">Positionierung</div>
+                  <div className="ttl">
+                    Strategisch denken.
+                    <br />
+                    Operativ liefern.
+                    <br />
+                    Profitabel skalieren.
                   </div>
                 </div>
               </div>
-            ))}
+            </Reveal>
           </div>
+        </div>
+      </section>
 
-          <div className="case-note" data-reveal>
-            <span>{t(COPY.home.cases.moreNote)}</span>
-            <Link className="btn solid" href="/contact">
-              <span>{t(COPY.cta.bookCall)}</span> <span className="arr">→</span>
+      {/* ============== BRAND MARQUEE ============== */}
+      <RevealOnView as="section" className="marquee-section" aria-label="Channels & Tools">
+        <div className="marquee-label">Channels &amp; Tools, in denen ich arbeite</div>
+        <div className="marquee-track">
+          {[...MARQUEE, ...MARQUEE].map((m, i) => (
+            <span className="m-item" key={i} aria-hidden={i >= MARQUEE.length}>
+              {m.logo ? <BrandLogo src={m.logo} alt="" /> : null}
+              {m.label}
+            </span>
+          ))}
+        </div>
+      </RevealOnView>
+
+      {/* ============== PROBLEMS ============== */}
+      <section id="problems">
+        <div className="wrap">
+          <div className="two-col">
+            <Reveal>
+              <span className="eyebrow">Problemsektion</span>
+              <h2 className="section-title">Kommt dir eine dieser Situationen bekannt vor?</h2>
+              <p className="lead" style={{ marginTop: 18 }}>
+                Typische Startpunkte meiner Kunden:
+              </p>
+            </Reveal>
+            <Reveal delay={80}>
+              <div className="stack">
+                {PROBLEMS.map((p, i) => (
+                  <div className="row-card" key={i}>
+                    <span className="num-circle">{String(i + 1).padStart(2, "0")}</span>
+                    <p>{p}</p>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+          </div>
+          <div className="mini-cta">
+            <p>
+              Wenn du dich hier wiedererkennst, brauchst du keinen weiteren Berater – sondern jemanden, der
+              Verantwortung übernimmt.
+            </p>
+            <Link href="#kontakt" className="cta-pill amber">
+              Erstgespräch anfragen <span aria-hidden="true">→</span>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ===== TESTIMONIAL ===== */}
-      <section className="testimonial" id="testimonial">
-        <div className="lbl" data-reveal>{t(COPY.home.testimonial.eyebrow)}</div>
-        <div className="inner" data-reveal style={{ ["--reveal-delay" as never]: "100ms" }}>
-          <blockquote>
-            <p
-              dangerouslySetInnerHTML={{
-                __html: lang === "en" ? COPY.home.testimonial.quoteEn : COPY.home.testimonial.quoteDe,
-              }}
-            />
-            <div className="by">
-              <div className="avatar">MS</div>
-              <div>
-                <span className="name" style={{ display: "block" }}>
-                  {t(COPY.home.testimonial.who)}
-                </span>
-                <span className="role">{t(COPY.home.testimonial.role)}</span>
-              </div>
-            </div>
-          </blockquote>
-          <div className="stat">
-            <div className="n">{t(COPY.home.testimonial.statN)}</div>
-            <div className="l">{t(COPY.home.testimonial.statL)}</div>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== § 07 — ABOUT (homepage block) ===== */}
-      <section id="about">
-        <div className="sec-head">
-          <span className="eyebrow" data-reveal>{t(COPY.home.aboutBlock.eyebrow)}</span>
-          <HeadlineReveal
-            as="h2"
-            className="sec-title"
-            style={{ ["--reveal-delay" as never]: "100ms" } as never}
-          >
-            {[
-              <span key="m" className="muted">{t(COPY.home.aboutBlock.h2Pre)}</span>,
-              t(COPY.home.aboutBlock.h2Tail),
-            ]}
-          </HeadlineReveal>
-        </div>
-
-        <div className="about">
-          <div className="about-photo" data-reveal>
-            <div className="frame">
-              <Image
-                className="photo-img"
-                src={JOACHIM.about}
-                width={JOACHIM_W}
-                height={JOACHIM_H}
-                alt="Joachim Heidel — Founder, Jokomerce"
-                sizes="(max-width: 1100px) 100vw, 600px"
-                loading="lazy"
-              />
-              <span className="signature">— J.H.</span>
-            </div>
-            <div className="photo-cap">
-              <span><b>{t(COPY.home.aboutBlock.capWho)}</b></span>
-              <span>{t(COPY.home.aboutBlock.capPlace)}</span>
-            </div>
-          </div>
-          <div className="about-body" data-reveal style={{ ["--reveal-delay" as never]: "100ms" }}>
-            <p
-              dangerouslySetInnerHTML={{
-                __html: lang === "en" ? COPY.home.aboutBlock.p1En : COPY.home.aboutBlock.p1De,
-              }}
-            />
-            <div className="accent-quote">{t(COPY.home.aboutBlock.pull)}</div>
-            <p
-              dangerouslySetInnerHTML={{
-                __html: lang === "en" ? COPY.home.aboutBlock.p2En : COPY.home.aboutBlock.p2De,
-              }}
-            />
-
-            <div className="timeline">
-              {COPY.home.aboutBlock.timeline.map((tl) => (
-                <div className="tl" key={tl.date.de}>
-                  <span className="date">{t(tl.date)}</span>
-                  <span
-                    className="pos"
-                    dangerouslySetInnerHTML={{
-                      __html: `${lang === "en" ? tl.posEn : tl.posDe}<small>${t(tl.small)}</small>`,
-                    }}
-                  />
-                  <span className="org">{t(tl.org)}</span>
+      {/* ============== AUDIENCE ============== */}
+      <section id="audience">
+        <div className="wrap">
+          <Reveal>
+            <span className="eyebrow">Zielgruppe</span>
+            <h2 className="section-title">Für wen ist Jokomerce ideal?</h2>
+            <p className="lead" style={{ marginTop: 18 }}>
+              Ich arbeite vor allem mit Marken und Händlern, die Marktplätze und D2C nicht nur „mitlaufen“ lassen
+              wollen, sondern als echten Profit-Hebel nutzen möchten:
+            </p>
+          </Reveal>
+          <div className="grid-4" style={{ marginTop: 32 }}>
+            {AUDIENCE.map((a, i) => (
+              <Reveal key={a.title} as="div" className="card audience-card" delay={i * 60}>
+                <div className="ico-wrap">
+                  <Icon name={a.icon} />
                 </div>
-              ))}
-            </div>
+                <h3 className="card-title">{a.title}</h3>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal as="div" className="audience-note">
+            <span className="eyebrow-inline">Faustregel</span>
+            <p>
+              Je komplexer dein Setup (Kanäle, Produkte, Länder), desto mehr zahlt sich ein klarer{" "}
+              <b>Head of Marketplace / CMO auf Zeit</b> aus.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ============== SERVICES ============== */}
+      <section id="leistungen">
+        <div className="wrap">
+          <Reveal>
+            <span className="eyebrow">Leistungs-Überblick</span>
+            <h2 className="section-title">Was ich für dich übernehme.</h2>
+          </Reveal>
+          <div className="grid-4" style={{ marginTop: 32 }}>
+            {SERVICES.map((s, i) => (
+              <Reveal key={s.title} as="div" className="card svc-card" delay={(i % 4) * 40}>
+                <div className="ico-wrap">
+                  <Icon name={s.icon} />
+                </div>
+                <h3 className="card-title">{s.title}</h3>
+                <p>{s.body}</p>
+                {s.brands ? (
+                  <div className="brand-row">
+                    {s.brands.map((b) => (
+                      <span className="brand-chip" key={b.name}>
+                        {b.logo ? <BrandLogo src={b.logo} alt="" /> : null}
+                        {b.name}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
+              </Reveal>
+            ))}
+          </div>
+          <div className="mini-cta">
+            <p>Details zu den Modulen besprechen wir im Erstgespräch — abgestimmt auf dein Setup.</p>
+            <Link href="#kontakt" className="cta-pill amber">
+              Erstgespräch anfragen <span aria-hidden="true">→</span>
+            </Link>
           </div>
         </div>
       </section>
 
-      <FinalCTA />
-
-      {/* ===== § 09 — FAQ ===== */}
-      <section id="faq">
-        <div className="sec-head">
-          <span className="eyebrow" data-reveal>{t(COPY.home.faq.eyebrow)}</span>
-          <HeadlineReveal
-            as="h2"
-            className="sec-title"
-            style={{ ["--reveal-delay" as never]: "100ms" } as never}
-          >
-            {[
-              <span key="m" className="muted">{t(COPY.home.faq.h2Pre)}</span>,
-              t(COPY.home.faq.h2Tail),
-            ]}
-          </HeadlineReveal>
-        </div>
-
-        <div className="faq">
-          <div className="col-l" data-reveal>
-            <h3>{t(COPY.home.faq.colLH3)}</h3>
-            <p>{t(COPY.home.faq.colLP)}</p>
-          </div>
-          <div className="col-r" data-reveal style={{ ["--reveal-delay" as never]: "100ms" }}>
-            {COPY.home.faq.items.map((f, i) => (
-              <details key={f.q.de} className="q" open={i === 0}>
-                <summary>{t(f.q)}</summary>
-                <div
-                  className="a"
-                  dangerouslySetInnerHTML={{ __html: lang === "en" ? f.aEn : f.aDe }}
-                />
-              </details>
+      {/* ============== USPs ============== */}
+      <section id="usps">
+        <div className="wrap">
+          <Reveal>
+            <span className="eyebrow">USPs / Wertversprechen</span>
+            <h2 className="section-title">Was Jokomerce von klassischer Beratung unterscheidet.</h2>
+          </Reveal>
+          <div className="grid-3" style={{ marginTop: 32 }}>
+            {USPS.map((u, i) => (
+              <Reveal key={u.title} as="div" className="card usp-card" delay={i * 60}>
+                <span className="ico-wrap">
+                  <Icon name={u.icon} />
+                </span>
+                <div>
+                  <h3 className="card-title">{u.title}</h3>
+                  <p>{u.body}</p>
+                </div>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ===== § 10 — CONTACT (inline form preview) ===== */}
-      <section id="kontakt">
-        <div className="sec-head">
-          <span className="eyebrow" data-reveal>{t(COPY.home.contact.eyebrow)}</span>
-          <HeadlineReveal
-            as="h2"
-            className="sec-title"
-            style={{ ["--reveal-delay" as never]: "100ms" } as never}
-          >
-            {[
-              <span key="m" className="muted">{t(COPY.home.contact.h2Pre)}</span>,
-              t(COPY.home.contact.h2Tail),
-            ]}
-          </HeadlineReveal>
-        </div>
-
-        <div className="contact">
-          <div className="info" data-reveal>
-            <h3>{t(COPY.home.contact.infoH3)}</h3>
-            <p>{t(COPY.home.contact.infoP)}</p>
-            <dl>
-              <dt>{t(COPY.home.contact.labels.email)}</dt>
-              <dd>hello@jokomerce.de</dd>
-              <dt>LinkedIn</dt>
-              <dd>/in/joachim-heidel</dd>
-              <dt>{t(COPY.home.contact.labels.location)}</dt>
-              <dd>Köln / Bonn · Remote</dd>
-              <dt>{t(COPY.home.contact.labels.markets)}</dt>
-              <dd>DE · EU · US</dd>
-              <dt>{t(COPY.home.contact.labels.availability)}</dt>
-              <dd>{t(COPY.home.contact.labels.availabilityVal)}</dd>
-            </dl>
+      {/* ============== PROCESS ============== */}
+      <section id="process">
+        <div className="wrap">
+          <Reveal>
+            <span className="eyebrow">Prozess / Zusammenarbeit</span>
+            <h2 className="section-title">So läuft unsere Zusammenarbeit ab.</h2>
+            <p className="lead" style={{ marginTop: 18 }}>
+              Statt losem „Beratungsgeplänkel“ gibt es einen klaren Ablauf in vier Phasen:
+            </p>
+          </Reveal>
+          <div className="process-grid" style={{ marginTop: 32 }}>
+            {PHASES.map((p, i) => (
+              <Reveal key={p.title} as="div" className="card phase-card" delay={i * 60}>
+                <div className="step">{p.step}</div>
+                <div className="step-num">{p.title}</div>
+                <p>{p.body}</p>
+              </Reveal>
+            ))}
           </div>
-
-          <form
-            data-reveal
-            style={{ ["--reveal-delay" as never]: "100ms" }}
-            action="mailto:hello@jokomerce.de"
-            method="post"
-            onSubmit={(e) => {
-              e.preventDefault();
-              alert(t(COPY.cta.replyNote));
-            }}
-          >
-            <div className="field">
-              <label>{t(COPY.home.contact.labels.name)}</label>
-              <input type="text" placeholder="Max Mustermann" required name="name" />
-            </div>
-            <div className="field">
-              <label>{t(COPY.home.contact.labels.company)}</label>
-              <input type="text" placeholder="Brand GmbH" name="company" />
-            </div>
-            <div className="field">
-              <label>{t(COPY.home.contact.labels.email)}</label>
-              <input type="email" placeholder="max@brand.de" required name="email" />
-            </div>
-            <div className="field">
-              <label>{t(COPY.home.contact.labels.channels)}</label>
-              <input type="text" placeholder="Amazon, Otto, Shopify…" name="channels" />
-            </div>
-            <div className="field full">
-              <label>{t(COPY.home.contact.labels.challenge)}</label>
-              <textarea
-                placeholder={t(COPY.home.contact.labels.challengePh)}
-                rows={3}
-                name="challenge"
-              />
-            </div>
-            <div className="field">
-              <label>{t(COPY.home.contact.labels.start)}</label>
-              <select name="start">
-                {t(COPY.home.contact.labels.startOpts).map((o) => (
-                  <option key={o}>{o}</option>
-                ))}
-              </select>
-            </div>
-            <div className="field">
-              <label>{t(COPY.home.contact.labels.revenue)}</label>
-              <select name="revenue">
-                <option>{t(COPY.home.contact.labels.revenueNA)}</option>
-                <option>&lt; 1 M €</option>
-                <option>1 – 5 M €</option>
-                <option>5 – 20 M €</option>
-                <option>&gt; 20 M €</option>
-              </select>
-            </div>
-            <div className="field-actions">
-              <button type="submit" className="btn solid">
-                <span>{t(COPY.cta.sendInquiry)}</span> <span className="arr">→</span>
-              </button>
-              <span className="note">{t(COPY.cta.replyNote)}</span>
-            </div>
-          </form>
+          <div className="mini-cta">
+            <p>
+              Ob wir mit einem Audit, einem Launch-Projekt oder direkt mit P&amp;L-Ownership starten, klären wir im
+              Erstgespräch.
+            </p>
+            <Link href="#kontakt" className="cta-pill amber">
+              Erstgespräch anfragen <span aria-hidden="true">→</span>
+            </Link>
+          </div>
         </div>
       </section>
-    </>
+
+      {/* ============== CASES ============== */}
+      <section id="cases">
+        <div className="wrap">
+          <Reveal>
+            <span className="eyebrow">Cases / Referenzen</span>
+            <h2 className="section-title">Ausgewählte Projekte &amp; Rollen (Auszug).</h2>
+          </Reveal>
+          <div className="logos-row" style={{ marginTop: 28 }}>
+            <span className="lpill">Kronenburg Handel</span>
+            <span className="lpill">Marwona GmbH</span>
+            <span className="lpill">PLConcepts GmbH &amp; Co. KG</span>
+            <span className="lpill">Moonster Products Ltd</span>
+          </div>
+          <Reveal as="div" className="card case-card" style={{ marginTop: 8 }}>
+            <h3 className="card-title" style={{ fontSize: 20 }}>
+              Case-Beispiel (anonymisiert)
+            </h3>
+            <div className="rows">
+              <div className="row">
+                <span className="k">Ausgangslage</span>
+                <span className="v">
+                  Marke mit starkem Amazon-Fokus, schwacher Profitabilität und kaum Multichannel-Präsenz.
+                </span>
+              </div>
+              <div className="row">
+                <span className="k">Ziel</span>
+                <span className="v">
+                  Profitables Wachstum auf Amazon + Aufbau weiterer Marktplätze (z. B. Otto, Kaufland) und D2C-Shop.
+                </span>
+              </div>
+              <div className="row">
+                <span className="k">Rolle</span>
+                <span className="v">
+                  Head of Marketplace / CMO auf Zeit mit <b>P&amp;L-Verantwortung</b>.
+                </span>
+              </div>
+              <div className="row">
+                <span className="k">Maßnahmen</span>
+                <span className="v">
+                  Katalog-Rebuild, Content-Optimierung, neue PPC-Struktur, Einführung von Reporting &amp;
+                  Forecasting, Setup weiterer Marktplätze, Aufbau Customer Support in Zendesk.
+                </span>
+              </div>
+              <div className="row">
+                <span className="k">Ergebnis</span>
+                <span className="v">
+                  <b>Stabilere Rankings, bessere Contribution Margin, skalierbare Ads-Struktur</b> und klarer
+                  Multichannel-Fahrplan.
+                </span>
+              </div>
+            </div>
+          </Reveal>
+          <div className="mini-cta">
+            <p>Details und weitere Cases gerne im persönlichen Gespräch.</p>
+            <Link href="#kontakt" className="cta-pill amber">
+              Erstgespräch anfragen <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ============== ABOUT ============== */}
+      <section id="about">
+        <div className="wrap">
+          <div className="about-grid">
+            <Reveal as="div" className="about-photo">
+              <div className="about-photo-img">
+                <Image
+                  src={JOACHIM.about}
+                  width={900}
+                  height={1125}
+                  alt="Joachim Heidel — Founder, Jokomerce"
+                  sizes="(max-width: 980px) 100vw, 540px"
+                />
+              </div>
+            </Reveal>
+            <Reveal as="div" className="about-body" delay={60}>
+              <span className="eyebrow">Über mich</span>
+              <h2 className="section-title">Wer hinter Jokomerce steckt.</h2>
+              <p style={{ marginTop: 18 }}>
+                Ich bin <b>Joachim Heidel</b> und übernehme für Marken und Händler die Rolle als Head of Marketplace
+                oder CMO auf Zeit.
+              </p>
+              <p>
+                Ich verantworte Wachstum und Profitabilität (P&amp;L) über Amazon und weitere Marktplätze sowie
+                Shopify-D2C — von der Strategie bis zur operativen Umsetzung.
+              </p>
+              <p>
+                Mit Erfahrung aus Inhouse, Agentur und Interim-Setups habe ich <b>1000+ Produktlaunches</b>{" "}
+                begleitet, globale Amazon-Kataloge optimiert und skalierbare Systeme aus Prozessen, Content, Ads
+                und Automatisierung aufgebaut.
+              </p>
+              <p>
+                Jokomerce steht für <b>pragmatische Umsetzung, klare Priorisierung und messbaren Business-Impact.</b>
+              </p>
+
+              <div style={{ marginTop: 8 }}>
+                <span className="eyebrow">Kernkompetenzen</span>
+              </div>
+              <div className="skills-grid">
+                {SKILLS.map((s) => (
+                  <div className="skill" key={s}>
+                    <span className="check">✓</span>
+                    {s}
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ marginTop: 24 }}>
+                <span className="eyebrow">Kurz-Timeline</span>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: 10,
+                    flexWrap: "wrap",
+                    alignItems: "center",
+                    marginTop: 8,
+                  }}
+                >
+                  <span className="lpill">TrafficDesign</span>
+                  <span style={{ color: "var(--ink-3)" }}>→</span>
+                  <span className="lpill">WETHEBRANDS_</span>
+                  <span style={{ color: "var(--ink-3)" }}>→</span>
+                  <span className="lpill">Freelancer</span>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ============== FAQ ============== */}
+      <section id="faq">
+        <div className="wrap">
+          <div className="two-col">
+            <Reveal>
+              <span className="eyebrow">FAQ</span>
+              <h2 className="section-title">Häufige Fragen.</h2>
+              <p className="lead" style={{ marginTop: 18 }}>
+                Was nicht beantwortet ist, klären wir gerne im Erstgespräch.
+              </p>
+            </Reveal>
+            <Reveal as="div" className="faq-list" delay={80}>
+              {FAQ.map((f, i) => (
+                <details className="q" key={f.q} open={i === 0}>
+                  <summary>{f.q}</summary>
+                  <div className="a">{f.a}</div>
+                </details>
+              ))}
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ============== FINAL CTA / CONTACT ============== */}
+      <section id="kontakt">
+        <div className="wrap">
+          <div className="final">
+            <div className="final-grid">
+              <Reveal>
+                <span className="eyebrow" style={{ color: "var(--accent)" }}>
+                  Kontakt
+                </span>
+                <h2>
+                  Lass uns über dein Marketplace- &amp; D2C-Setup <span className="acc">sprechen.</span>
+                </h2>
+                <p>
+                  Wenn du dein Marktplatz- und D2C-Geschäft profitabel skalieren willst — mit klarer
+                  P&amp;L-Verantwortung und echter Umsetzung — dann lass uns sprechen.
+                </p>
+                <p>
+                  Im Erstgespräch schauen wir uns deine aktuelle Situation an und klären, ob und wie Jokomerce dich
+                  konkret unterstützen kann.
+                </p>
+                <div style={{ marginTop: 24 }}>
+                  <a href="mailto:hello@jokomerce.de" className="cta-pill amber">
+                    Erstgespräch anfragen <span aria-hidden="true">→</span>
+                  </a>
+                </div>
+              </Reveal>
+              <ContactForm />
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }

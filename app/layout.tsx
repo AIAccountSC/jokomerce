@@ -74,7 +74,7 @@ const PERSON_LD = {
   name: "Joachim Heidel",
   jobTitle: "Head of Marketplace & Interim CMO",
   url: SITE,
-  image: `${SITE}/joachim/joachim-hero.jpg`,
+  image: `${SITE}/joachim/joachim-hero.webp`,
   sameAs: ["https://www.linkedin.com/in/joachim-heidel-803b36134/"],
   worksFor: { "@type": "Organization", name: "Jokomerce", url: SITE },
   knowsAbout: [
